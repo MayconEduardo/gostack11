@@ -2,6 +2,7 @@ import { compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 import { getRepository } from 'typeorm'
 import { User } from '../models/User'
+import AuthConfig from '../config/auth'
 
 interface Request {
   email: string
@@ -29,9 +30,9 @@ class CreateSessionService {
       throw new Error('Incorrect email/password combination.')
     }
 
-    const token = sign({}, 'abc123', {
+    const token = sign({}, AuthConfig.jwt.secret, {
       subject: user.id,
-      expiresIn: '1d'
+      expiresIn: AuthConfig.jwt.expiresIn
     })
 
     return {
